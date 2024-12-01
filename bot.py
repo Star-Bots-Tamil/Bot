@@ -22,12 +22,12 @@ bot = Client("Renamer", bot_token=BOT_TOKEN, api_id=API_ID, api_hash=API_HASH, p
 
 user = ''
 if len(STRING_SESSION) != 0:
-    log_info("Creating client from USER_SESSION_STRING")
+    print("Creating client from USER_SESSION_STRING")
     try:
         user = wztgClient('user', API_ID, API_HASH, session_string=STRING_SESSION,
                         parse_mode=enums.ParseMode.HTML, no_updates=True).start()
     except Exception as e:
-        log_error(f"Failed making client from USER_SESSION_STRING : {e}")
+        print(f"Failed making client from USER_SESSION_STRING : {e}")
         user = ''
 
 if STRING_SESSION:
