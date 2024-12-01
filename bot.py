@@ -2,8 +2,8 @@ from pyrogram import Client, __version__, idle
 import asyncio
 import re, os, time
 from pyrogram.raw.all import layer
-from aiohttp import web
-from route import web_server
+import pyromod
+import pyrogram.utils
 from plugins.core.bypass_checker import app as Client2
 
 # Configuration
