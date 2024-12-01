@@ -15,8 +15,8 @@ id_pattern = re.compile(r"^.\d+$")
 BOT_TOKEN = os.environ.get("TOKEN", "7713324413:AAGYzSbK5Z9KbhaJGiQdA7Rs-YaYLk4fNiU")
 API_ID = int(os.environ.get("API_ID", 11973721))
 API_HASH = os.environ.get("API_HASH", "5264bf4663e9159565603522f58d3c18")
-ADMINS = [int(admin) if id_pattern.search(admin) else admin for admin in os.environ.get('ADMINS', '1391556668 1242556540').split()]
-STRING_SESSION = os.environ.get("STRING_SESSION", "BQC2tFkAkYZ0vGtInJ-rss-wOyNAoPYUF1W0G_nZyrjJnG6CGFR645YKCIU2qRAVKWjomO8Gc4VOxIJYMZLBM9z0xoqeZ02w7T4lPWHHbOzstdycyhnSC2Q4iM7QzNuoXOCcN1wGVpLjknPinznoJ7KuAzsprVaMnKpVKdAHkQcxhT9Smtg0T0BCQM41QbLuZCMKOdrRZLodflAXpcm029Fu-N90nhVjlaZCpNrdxQlCBi3deUT0joWn7tTGnHCc_qsFA3QZBqbqCzZgHZbK-xLNv2mzCZtB0M7-Vo-yfrXOXVdUnOKZDgLm0hBY2AN5ESHTJaxPx86FpwuHqnMJgfd8RPTuUAAAAABS8Xg8AA")
+ADMINS = [int(admin) if id_pattern.search(admin) else admin for admin in os.environ.get('ADMINS', '1391556668 1242556540 5239847373').split()]
+STRING_SESSION = os.environ.get("STRING_SESSION", "BQAlMzYWr3AFQgzppOcTWe3Mh7VGCKGAnObs6tykVwyexB04GNElsS1o12aRSeTTuGamgNJMssiUls33QEUfTajt27zrUQCi0HQ-qCCI8D_IT6pDnlv2tgCnHwkcEYJ6vUgBxPZSdMkkfnQ4tiL93MA4Vxt2Gwd6FUrxD2qwUXOQRnXUFIBTYPi1ihcjkijBU3-iixEsQwOYISLuM3sJ10liG-CdITfVSAhdIYciegR4-BNIHGmeYs38GMbbhFA0dM0i0z7Orm7FsziOZ_r56YbWbWuOH8R3Re-7hntBrThvXP_nI47zmYxuC8zIZ-qleZiI-VhHRoBCHNA46VWf6xHlUvF4PAA")
 
 bot = Client("Renamer", bot_token=BOT_TOKEN, api_id=API_ID, api_hash=API_HASH, plugins=dict(root='plugins'))
 
