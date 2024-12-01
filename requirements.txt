@@ -1,5 +1,6 @@
 TgCrypto
 pyrogram
+telethon
 pyromod==1.5
 dnspython==2.1.0
 httpcore
