@@ -3,6 +3,7 @@ from urllib.parse import urlparse
 from plugins.core.exceptions import DDLException
 from plugins.scraper import *
 import os
+from pyrogram import Client
 
 API_ID = int(os.environ.get("API_ID",11973721))
 API_HASH = os.environ.get("API_HASH", "5264bf4663e9159565603522f58d3c18")
