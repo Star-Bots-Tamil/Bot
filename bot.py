@@ -1,3 +1,4 @@
+
 from pyrogram import Client, __version__, idle
 import asyncio
 import re, os, time
@@ -5,6 +6,9 @@ from pyrogram.raw.all import layer
 import pyromod
 import pyrogram.utils
 from plugins.core.bypass_checker import app as Client2
+
+pyrogram.utils.MIN_CHAT_ID = -999999999999
+pyrogram.utils.MIN_CHANNEL_ID = -100999999999999
 
 # Configuration
 id_pattern = re.compile(r"^.\d+$")
