@@ -19,9 +19,7 @@ CHAT_ID = int(os.environ.get("CHAT_ID", -1001542301808))
 @Client.on_message(BypassFilter & (filters.user(ADMINS)))
 async def bypass_check(client, message):
     uid = message.from_user.id
-    if (reply_to := message.reply_to_message) and (
-        reply_to.text or reply_to.caption
-    ):
+    if (reply_to := message.reply_to_message) and (reply_to.text or reply_to.caption):
         txt = reply_to.text or reply_to.caption
         entities = reply_to.entities or reply_to.caption_entities
     elif AUTO_BYPASS or len(message.text.split()) > 1:
@@ -29,10 +27,8 @@ async def bypass_check(client, message):
         entities = message.entities
     else:
         return await message.reply("<b>No Link Provided!</b>")
-
     wait_msg = await message.reply("<b>Bypassing...</b>")
     start = time()
-
     links = []
     tasks = []
     for entity in entities:
@@ -40,48 +36,38 @@ async def bypass_check(client, message):
             link = txt[entity.offset : entity.offset + entity.length]
             links.append(link)
             tasks.append(create_task(direct_link_checker(link)))
-
     results = await gather(*tasks, return_exceptions=True)
-
     output = []
-    max_length = 4096  # Telegram message limit
+    max_length = 4096
     current_part = ""
-    parts = []  # To store parts of the output message
-
+    parts = []
     for result, link in zip(results, links):
         if isinstance(result, Exception):
             entry = f"┖ <b>Error:</b> {result}"
         else:
             entry = f"┖ <b>Bypass Link:</b> {result}"
-
-        # Check if the current part exceeds the max length
         if len(current_part) + len(entry) > max_length:
-            parts.append(current_part)  # Save the current part
-            current_part = entry  # Start a new part
+            parts.append(current_part.strip())
+            current_part = entry
         else:
-            current_part += "\n" + entry  # Append to the current part
-
-    # Add the final part
-    if current_part:
-        parts.append(current_part)
-
-    # Add footer details to the last part
+            current_part += "\n" + entry
+    if current_part.strip():
+        parts.append(current_part.strip())
     elapsed = time() - start
     footer = (
         f"\n\n<b>Total Links: {len(links)}</b>\n"
         f"<b>Time: {convert_time(elapsed)}</b>\n"
         f"Bypassed By: <a href=https://t.me/TamilMV_Scrapper_Bot><b>1TamilMV Scrapper Bot</b></a>"
     )
-    if len(parts[-1]) + len(footer) <= max_length:
+    if parts and len(parts[-1]) + len(footer) <= max_length:
         parts[-1] += footer
     else:
         parts.append(footer)
-
-    # Edit the wait message with the parts
-    await wait_msg.delete()  # Delete the "Bypassing..." message
+    await wait_msg.delete()
     for part in parts:
-        await message.reply(part, parse_mode=enums.ParseMode.HTML)
-        
+        if part.strip():
+            await message.reply(part, parse_mode=enums.ParseMode.HTML)
+
 @Client.on_message(BypassFilter1 & filters.user(ADMINS))
 async def bypass_check_for_torrent(client, message):
     try:
