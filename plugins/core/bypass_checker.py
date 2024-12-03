@@ -60,13 +60,43 @@ async def direct_link_checker(link, onlylink=False):
 
 async def process_link_and_send(client, link):
     """
-    Processes a link using `direct_link_checker1` and sends each torrent link to the group/channel.
+    Processes a link using `tamilmv1` and sends each torrent filename and link to the group/channel.
     """
     try:
-        torrent_links = await direct_link_checker1(link)
-        for torrent_link in torrent_links:
-            # Send each torrent link as a separate message
-            await app.send_message(CHAT_ID, f"/qbleech {torrent_link}")
+        # Get the list of torrent data (filename and links)
+        torrent_data = await tamilmv1(link)
+        
+        for data in torrent_data:
+            filename = data.get("filename", "Unknown Filename")  # Extract filename
+            torrent_link = data.get("link", "No Link")          # Extract torrent link
+            
+            # Send the filename and torrent link as a formatted message
+            await app.send_message(
+                CHAT_ID, 
+                f"/qbleech {torrent_link}\n\n<b>Filename :- {filename}"</b>,
+                parse_mode=enums.ParseMode.HTML
+            )
+    except Exception as e:
+        print(f"Error processing {link}: {e}")  # Log the error for debugging
+
+async def process_link_and_send1(client, link):
+    """
+    Processes a link using `direct_link_checker2` and sends each magnet link with its filename to the group/channel.
+    """
+    try:
+        # Get the list of magnet data (filename and magnet links)
+        magnet_data = await direct_link_checker2(link)
+        
+        for data in magnet_data:
+            filename = data.get("filename", "Unknown Filename")  # Extract filename
+            magnet_link = data.get("magnet", "No Magnet Link")   # Extract magnet link
+            
+            # Send the filename and magnet link as a formatted message
+            await app.send_message(
+                CHAT_ID, 
+                f"/qbleech {magnet_link}\n\n<b>Filename :- {filename}</b>",
+                parse_mode=enums.ParseMode.HTML
+            )
     except Exception as e:
         print(f"Error processing {link}: {e}")  # Log the error for debugging
 
@@ -76,6 +106,17 @@ async def direct_link_checker1(link):
     """
     if bool(match(r"https?:\/\/.+\.1tamilmv\.\S+", link)):
         return await tamilmv1(link)
+    else:
+        raise DDLException(
+            f"<b>No Bypass Function Found for your Link:</b> <code>{link}</code>"
+        )
+async def direct_link_checker2(link):
+    """
+    Processes a link and extracts magnet links using `tamilmv2`.
+    """
+    # Check if the link matches a valid 1TamilMV URL pattern
+    if bool(match(r"https?:\/\/.+\.1tamilmv\.\S+", link)):
+        return await tamilmv2(link)  # Use tamilmv2 to extract magnet links
     else:
         raise DDLException(
             f"<b>No Bypass Function Found for your Link:</b> <code>{link}</code>"
