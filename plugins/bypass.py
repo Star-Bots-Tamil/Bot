@@ -19,7 +19,9 @@ CHAT_ID = int(os.environ.get("CHAT_ID", -1001542301808))
 @Client.on_message(BypassFilter & (filters.user(ADMINS)))
 async def bypass_check(client, message):
     uid = message.from_user.id
-    if (reply_to := message.reply_to_message) and (reply_to.text or reply_to.caption):
+    if (reply_to := message.reply_to_message) and (
+        reply_to.text or reply_to.caption
+    ):
         txt = reply_to.text or reply_to.caption
         entities = reply_to.entities or reply_to.caption_entities
     elif AUTO_BYPASS or len(message.text.split()) > 1:
@@ -51,16 +53,7 @@ async def bypass_check(client, message):
     elapsed = time() - start
     reply_text = "\n".join(output)
     reply_text += f"\n\n<b>Total Links: {len(links)}</b>\n<b>Time: {convert_time(elapsed)}</b>"
-
-    # Split the message if it exceeds Telegram's character limit (4096)
-    max_length = 4096
-    if len(reply_text) > max_length:
-        # Split the long message into parts
-        parts = [reply_text[i:i + max_length] for i in range(0, len(reply_text), max_length)]
-        for part in parts:
-            await wait_msg.edit(part)  # Edit the message with each part
-    else:
-        await wait_msg.edit(reply_text)
+    await wait_msg.edit(reply_text)
 
 @Client.on_message(BypassFilter1 & filters.user(ADMINS))
 async def bypass_check_for_torrent(client, message):
