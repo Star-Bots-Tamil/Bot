@@ -31,6 +31,8 @@ async def direct_link_checker(link, onlylink=False):
         return await tamilmv(link)
     elif bool(match(r"https?:\/\/.+\.1tamilmv\.\S+", link)):
         return await tamilmv1(link)
+    elif bool(match(r"https?:\/\/.+\.1tamilmv\.\S+", link)):
+        return await tamilmv2(link)
         
     # Exceptions
     elif bool(match(r"https?:\/\/.+\.technicalatg\.\S+", link)):
@@ -67,7 +69,6 @@ async def process_link_and_send(client, link):
             await app.send_message(CHAT_ID, f"/qbleech {torrent_link}")
     except Exception as e:
         print(f"Error processing {link}: {e}")  # Log the error for debugging
-
 
 async def direct_link_checker1(link):
     """
