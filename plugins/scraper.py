@@ -17,8 +17,8 @@ async def tamilmv(url):
         filename = sub(r"www\S+|\- |\.torrent", "", t.string)
         parse_data += f"""
         
-<b>{no}.</b> <code>{filename}</code>
-┖ <b>Links :</b> <a href="{m['href']}"><b>Magnet </b>🧲</a>  | <a href="{t['href']}"><b>Torrent 🌐</b></a>"""
+<b>{no}.</b><code>{filename}</code>
+┖ <b>Links :</b> <a href="{m['href']}"><b>Magnet </b>🧲</a>  <b>|</b> <a href="{t['href']}"><b>Torrent 🌐</b></a>"""
     return parse_data
     
 async def tamilmv1(url):
