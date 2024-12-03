@@ -4,35 +4,35 @@ from bs4 import BeautifulSoup
 import re
 
 async def tamilmv(url):
-    cget = create_scraper().request
-    resp = cget("GET", url)
-    soup = BeautifulSoup(resp.text, "html.parser")
+    async with create_scraper().request("GET", url) as resp:
+        soup = BeautifulSoup(await resp.text(), "html.parser")
+    
     mag = soup.select('a[href^="magnet:?xt=urn:btih:"]')
     tor = soup.select('a[data-fileext="torrent"]')
-
+    
     parse_data = f"<b><u>{soup.title.string}</u></b>\n"
-    messages = []  # To store the parts of the message
-    max_length = 4096  # Telegram character limit
-    current_part = parse_data  # Current message part
-
+    messages = []
+    max_length = 4096
+    current_part = parse_data
+    
     for no, (t, m) in enumerate(zip(tor, mag), start=1):
         filename = re.sub(r"www\S+|\- |\.torrent", "", t.string)
         entry = f"""
-<b>{no}.</b> <code>{filename}</code>
-<b>┖ Links: <a href="https://t.me/share/url?url={m}">Magnet 🧲</a> | <a href="{t['href']}">Torrent 🌐</a></b>"""
-
-        # Check if adding this entry exceeds the max length
+ <b>{no}.</b> 
+<code>{filename}</code> 
+<b>┖ Links: <a href="(link unavailable)">Magnet 🧲</a> | <a href="{t['href']}">Torrent 🌐</a></b>
+"""
+        
         if len(current_part) + len(entry) > max_length:
-            messages.append(current_part)  # Save the current part
-            current_part = parse_data + entry  # Start a new part
+            messages.append(current_part)
+            current_part = parse_data + entry
         else:
-            current_part += entry  # Append to the current part
-
-    # Append the last part if it contains data
+            current_part += entry
+            
     if current_part:
         messages.append(current_part)
-
-    return messages  # Return the list of message parts
+        
+    return messages
     
 async def tamilmv1(url):
     cget = create_scraper().request
