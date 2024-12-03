@@ -57,62 +57,71 @@ async def bypass_check(client, message):
 
 @Client.on_message(BypassFilter1 & filters.user(ADMINS))
 async def bypass_check_for_torrent(client, message):
-    if (reply_to := message.reply_to_message) and (
-        reply_to.text or reply_to.caption
-    ):
-        txt = reply_to.text or reply_to.caption
-        entities = reply_to.entities or reply_to.caption_entities
-    elif AUTO_BYPASS or len(message.text.split()) > 1:
-        txt = message.text
-        entities = message.entities
-    else:
-        return  # No links provided, silently exit
+    try:
+        # Check if the message is a reply and has text or caption
+        if (reply_to := message.reply_to_message) and (reply_to.text or reply_to.caption):
+            txt = reply_to.text or reply_to.caption
+            entities = reply_to.entities or reply_to.caption_entities
+        # Check if the message contains a URL or more than one word
+        elif AUTO_BYPASS or len(message.text.split()) > 1:
+            txt = message.text
+            entities = message.entities
+        else:
+            return  # No links provided, silently exit
 
-    links = []
-    tasks = []
+        links = []
+        tasks = []
 
-    # Extract URLs from the message
-    for entity in entities:
-        if entity.type in (MessageEntityType.URL, MessageEntityType.TEXT_LINK):
-            link = txt[entity.offset : entity.offset + entity.length]
-            links.append(link)
-            tasks.append(create_task(process_link_and_send(client, link)))
+        # Extract URLs from the message
+        for entity in entities:
+            if entity.type in (types.MessageEntityType.URL, types.MessageEntityType.TEXT_LINK):
+                link = txt[entity.offset: entity.offset + entity.length]
+                links.append(link)
+                tasks.append(create_task(process_link_and_send(client, link)))
 
-    # Await all tasks for link processing
-    await gather(*tasks, return_exceptions=True)
-    
-    await message.reply("<b>Torrent Links Sent Successfully!</b>")
+        # Await all tasks for link processing
+        await gather(*tasks, return_exceptions=True)
 
+        await message.reply("<b>Torrent Links Sent Successfully!</b>")
+
+    except Exception as e:
+        # Log the error with the exception message
+        print(f"Error processing message: {e}")
+        await message.reply(f"<b>Error occurred while processing the torrent links:</b> {e}")
+        
 @Client.on_message(BypassFilter2 & filters.user(ADMINS))
 async def bypass_check_for_magnets(client, message):
-    """
-    Handles magnet link processing for a channel or group message.
-    """
-    if (reply_to := message.reply_to_message) and (
-        reply_to.text or reply_to.caption
-    ):
-        txt = reply_to.text or reply_to.caption
-        entities = reply_to.entities or reply_to.caption_entities
-    elif AUTO_BYPASS or len(message.text.split()) > 1:
-        txt = message.text
-        entities = message.entities
-    else:
-        return  # No links provided, silently exit
+    try:
+        # Check if the message is a reply and has text or caption
+        if (reply_to := message.reply_to_message) and (reply_to.text or reply_to.caption):
+            txt = reply_to.text or reply_to.caption
+            entities = reply_to.entities or reply_to.caption_entities
+        # Check if the message contains a URL or more than one word
+        elif AUTO_BYPASS or len(message.text.split()) > 1:
+            txt = message.text
+            entities = message.entities
+        else:
+            return  # No links provided, silently exit
 
-    links = []
-    tasks = []
+        links = []
+        tasks = []
 
-    # Extract URLs from the message
-    for entity in entities:
-        if entity.type in (MessageEntityType.URL, MessageEntityType.TEXT_LINK):
-            link = txt[entity.offset : entity.offset + entity.length]
-            links.append(link)
-            tasks.append(create_task(process_link_and_send1(client, link)))  # Use process_link_and_send1
+        # Extract URLs from the message
+        for entity in entities:
+            if entity.type in (types.MessageEntityType.URL, types.MessageEntityType.TEXT_LINK):
+                link = txt[entity.offset: entity.offset + entity.length]
+                links.append(link)
+                tasks.append(create_task(process_link_and_send1(client, link)))
 
-    # Await all tasks for magnet link processing
-    await gather(*tasks, return_exceptions=True)
-    
-    await message.reply("<b>Magnet Links Sent Successfully!</b>")
+        # Await all tasks for link processing
+        await gather(*tasks, return_exceptions=True)
+
+        await message.reply("<b>Torrent Links Sent Successfully!</b>")
+
+    except Exception as e:
+        # Log the error with the exception message
+        print(f"Error processing message: {e}")
+        await message.reply(f"<b>Error occurred while processing the torrent links:</b> {e}")
 
 # Inline query for bypass
 @Client.on_inline_query()
