@@ -73,7 +73,7 @@ async def process_link_and_send(client, link):
             # Send the filename and torrent link as a formatted message
             await app.send_message(
                 CHAT_ID, 
-                f"/qbleech {torrent_link}\n\n<b>Filename :- {filename}"</b>,
+                f"/qbleech {torrent_link}\n\n<b>Filename :- {filename}</b>",
                 parse_mode=enums.ParseMode.HTML
             )
     except Exception as e:
