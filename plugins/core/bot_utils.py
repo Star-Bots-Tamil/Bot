@@ -43,7 +43,7 @@ async def auto_bypass1(_, c, message):
     elif (
         not AUTO_BYPASS
         and (txt := message.text)
-        and match(rf"^\/(send|sendtorrents)(@{c.me.username})?($| )", txt)
+        and match(rf"^\/(send_torrents|sendtorrents|st)(@{c.me.username})?($| )", txt)
         and not match(r"^\/(bash|shell)($| )", txt)
     ):
         return True
@@ -51,6 +51,29 @@ async def auto_bypass1(_, c, message):
 
 
 BypassFilter1 = create(auto_bypass1)
+
+async def auto_bypass2(_, c, message):
+    if (
+        AUTO_BYPASS
+        and message.entities
+        and not match(r"^\/(bash|shell)($| )", message.text)
+        and any(
+            enty.type in [MessageEntityType.TEXT_LINK, MessageEntityType.URL]
+            for enty in message.entities
+        )
+    ):
+        return True
+    elif (
+        not AUTO_BYPASS
+        and (txt := message.text)
+        and match(rf"^\/(send_magnets|sendmagnets|sm)(@{c.me.username})?($| )", txt)
+        and not match(r"^\/(bash|shell)($| )", txt)
+    ):
+        return True
+    return False
+
+
+BypassFilter2 = create(auto_bypass2)
 
 def convert_time(seconds):
     mseconds = seconds * 1000
