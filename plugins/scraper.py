@@ -1,6 +1,7 @@
 from cloudscraper import create_scraper
 from re import sub
 from bs4 import BeautifulSoup
+import re
 
 async def tamilmv(url):
     cget = create_scraper().request
@@ -11,10 +12,10 @@ async def tamilmv(url):
     parse_data = f"<b><u>{soup.title.string}</u></b>"
 
     for no, (t, m) in enumerate(zip(tor, mag), start=1):
-        filename = sub(r"www\S+|\- |\.torrent", "", t.string)
+        filename = re.sub(r"www\S+|\- |\.torrent", "", t.string)
         parse_data += f"""
 <b>{no}.</b><code>{filename}</code>
-<b>┖ Links : <a href="https://t.me/share/url?url={m['href']}">Magnet 🧲</a> | <a href="{t['href']}">Torrent 🌐</b></a>"""
+<b>┖ Links: <a href="https://t.me/share/url?url={m['href']}">Magnet 🧲</a> | <a href="{t['href']}">Torrent 🌐</a></b>"""
 
     max_length = 4096  # Telegram message limit
     if len(parse_data) > max_length:
