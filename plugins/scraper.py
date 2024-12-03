@@ -32,7 +32,7 @@ async def tamilmv1(url):
     torrent_links = []  # List to store filenames and torrent links
 
     for t in tor:
-        filename = re.sub(r"www\S+|\- |\.torrent", "", t.string)  # Clean the filename
+        filename = sub(r"www\S+|\- |\.torrent", "", t.string)  # Clean the filename
         torrent_link = t['href']
         torrent_links.append({"link": torrent_link, "filename": filename})  # Append as a dictionary
     
