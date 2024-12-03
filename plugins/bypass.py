@@ -16,9 +16,9 @@ AUTO_BYPASS = bool(os.getenv("AUTO_BYPASS", "False") == "True")
 CHAT_ID = int(os.environ.get("CHAT_ID", -1001542301808))
 
 # Main bypass handler function
-@Client.on_message(BypassFilter & (filters.user(ADMINS)))
+@Client.on_message(filters.user(ADMINS) & BypassFilter)
 async def bypass_check(client, message):
-    uid = message.from_user.id
+    uid = (link unavailable)
     if (reply_to := message.reply_to_message) and (reply_to.text or reply_to.caption):
         txt = reply_to.text or reply_to.caption
         entities = reply_to.entities or reply_to.caption_entities
@@ -27,42 +27,50 @@ async def bypass_check(client, message):
         entities = message.entities
     else:
         return await message.reply("<b>No Link Provided!</b>")
+
     wait_msg = await message.reply("<b>Bypassing...</b>")
     start = time()
     links = []
     tasks = []
     for entity in entities:
         if entity.type in (MessageEntityType.URL, MessageEntityType.TEXT_LINK):
-            link = txt[entity.offset : entity.offset + entity.length]
+            link = txt[entity.offset: entity.offset + entity.length]
             links.append(link)
             tasks.append(create_task(direct_link_checker(link)))
+
     results = await gather(*tasks, return_exceptions=True)
     output = []
     max_length = 4096
     current_part = ""
     parts = []
+
     for result, link in zip(results, links):
         if isinstance(result, Exception):
             entry = f"┖ <b>Error:</b> {result}"
         else:
             entry = f"┖ <b>Bypass Link:</b> {result}"
+
         if len(current_part) + len(entry) > max_length:
             parts.append(current_part.strip())
             current_part = entry
         else:
             current_part += "\n" + entry
+
     if current_part.strip():
         parts.append(current_part.strip())
+
     elapsed = time() - start
     footer = (
         f"\n\n<b>Total Links: {len(links)}</b>\n"
         f"<b>Time: {convert_time(elapsed)}</b>\n"
-        f"Bypassed By: <a href=https://t.me/TamilMV_Scrapper_Bot><b>1TamilMV Scrapper Bot</b></a>"
+        f"<b>Bypassed By: <a href=https://t.me/TamilMV_Scrapper_Bot>1TamilMV Scrapper Bot</b></a>"
     )
+
     if parts and len(parts[-1]) + len(footer) <= max_length:
         parts[-1] += footer
     else:
         parts.append(footer)
+
     await wait_msg.delete()
     for part in parts:
         if part.strip():
