@@ -2,10 +2,6 @@ from cloudscraper import create_scraper
 from re import sub
 from bs4 import BeautifulSoup
 
-from cloudscraper import create_scraper
-from bs4 import BeautifulSoup
-from re import sub
-
 async def tamilmv(url):
     cget = create_scraper().request
     resp = cget("GET", url)
@@ -13,12 +9,13 @@ async def tamilmv(url):
     mag = soup.select('a[href^="magnet:?xt=urn:btih:"]')
     tor = soup.select('a[data-fileext="torrent"]')
     parse_data = f"<b><u>{soup.title.string}</u></b>"
+
     for no, (t, m) in enumerate(zip(tor, mag), start=1):
         filename = sub(r"www\S+|\- |\.torrent", "", t.string)
         parse_data += f"""
-        
 <b>{no}.</b><code>{filename}</code>
-┖ <b>Links :</b> <a href="https://t.me/share/url?url={m['href']}"><b>Magnet </b>🧲</a> <b>|</b> <a href="{t['href']}"><b>Torrent 🌐</b></a>"""
+<b>┖ Links : <a href="https://t.me/share/url?url={m['href']}">Magnet 🧲</a> | <a href="{t['href']}">Torrent 🌐</b></a>"""
+
     max_length = 4096  # Telegram message limit
     if len(parse_data) > max_length:
         parts = [parse_data[i:i + max_length] for i in range(0, len(parse_data), max_length)]
@@ -37,7 +34,7 @@ async def tamilmv1(url):
     for t in tor:
         filename = re.sub(r"www\S+|\- |\.torrent", "", t.string)  # Clean the filename
         torrent_link = t['href']
-        torrent_links.append({"filename": filename, "link": torrent_link})  # Append as a dictionary
+        torrent_links.append({"link": torrent_link, "filename": filename})  # Append as a dictionary
     
     return torrent_links
 
@@ -55,7 +52,7 @@ async def tamilmv2(url):
     # Generate parsed list
     for m in mag:
         filename = sub(r"www\S+|\- |\.torrent", "", m.split('&dn=')[1] if '&dn=' in m else "Unknown")  # Extract filename from magnet link or use 'Unknown'
-        parsed_list.append({"filename": filename, "magnet": m})
+        parsed_list.append({"magnet": m, "filename": filename})
     
     # Return only the parsed list
     return parsed_list
