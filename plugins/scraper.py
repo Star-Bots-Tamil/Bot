@@ -20,7 +20,7 @@ async def tamilmv(url):
         entry = f"""
  <b>{no}.</b> 
 <code>{filename}</code> 
-<b>┖ Links: <a href=https://t.me/share/url?url={m}">Magnet 🧲</a> | <a href="{t['href']}">Torrent 🌐</a></b>
+<b>┖ Links: <a href="(link unavailable)">Magnet 🧲</a> | <a href="{t['href']}">Torrent 🌐</a></b>
 """
         
         if len(current_part) + len(entry) > max_length:
