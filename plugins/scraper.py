@@ -4,36 +4,33 @@ from bs4 import BeautifulSoup
 import re
 
 async def tamilmv(url):
-    async with create_scraper().request("GET", url) as resp:
-        soup = BeautifulSoup(await resp.text(), "html.parser")
-    
+    cget = create_scraper().request
+    resp = cget("GET", url)
+    soup = BeautifulSoup(resp.text, "html.parser")
     mag = soup.select('a[href^="magnet:?xt=urn:btih:"]')
     tor = soup.select('a[data-fileext="torrent"]')
-    
     parse_data = f"<b><u>{soup.title.string}</u></b>\n"
     messages = []
     max_length = 4096
     current_part = parse_data
-    
+
     for no, (t, m) in enumerate(zip(tor, mag), start=1):
         filename = re.sub(r"www\S+|\- |\.torrent", "", t.string)
         entry = f"""
- <b>{no}.</b> 
-<code>{filename}</code> 
-<b>┖ Links: <a href="(link unavailable)">Magnet 🧲</a> | <a href="{t['href']}">Torrent 🌐</a></b>
-"""
-        
+<b>{no}.</b> <code>{filename}</code>
+<b>┖ Links: <a href="https://t.me/share/url?url={m['href']}">Magnet 🧲</a> | <a href="{t['href']}">Torrent 🌐</a></b>"""
+
         if len(current_part) + len(entry) > max_length:
             messages.append(current_part)
             current_part = parse_data + entry
         else:
             current_part += entry
-            
+
     if current_part:
         messages.append(current_part)
-        
+
     return messages
-    
+
 async def tamilmv1(url):
     cget = create_scraper().request
     resp = cget("GET", url)
