@@ -36,14 +36,18 @@ async def tamilmv2(url):
     cget = create_scraper().request
     resp = cget("GET", url)
     soup = BeautifulSoup(resp.text, "html.parser")
-    mag = [m['href'] for m in soup.select('a[href^="magnet:?xt=urn:btih:"]')]  # Extract full magnet links
-    tor = soup.select('a[data-fileext="torrent"]')
-    parse_data = f"<b><u>{soup.title.string}</u></b>"
-    for no, (t, m) in enumerate(zip(tor, mag), start=1):
-        filename = sub(r"www\S+|\- |\.torrent", "", t.string)
-        parse_data += f"""
+    
+    # Extract full magnet links
+    mag = [m['href'] for m in soup.select('a[href^="magnet:?xt=urn:btih:"]')]
+    
+    # List to store parsed data
+    parsed_list = []
+
+    # Generate parsed list
+    for m in mag:
+        filename = sub(r"www\S+|\- |\.torrent", "", m.split('&dn=')[1] if '&dn=' in m else "Unknown")  # Extract filename from magnet link or use 'Unknown'
+        parsed_list.append({"filename": filename, "magnet": m})
+    
+    # Return only the parsed list
+    return parsed_list
         
-{no}. <code>{filename}</code>
-┖ <b>Full Magnet:</b> <code>{m}</code>
-┖ <b>Links :</b> <a href="{m}"><b>Magnet 🧲</b></a>  | <a href="{t['href']}"><b>Torrent 🌐</b></a>"""
-    return parse_data
