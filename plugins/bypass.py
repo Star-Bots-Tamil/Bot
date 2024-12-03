@@ -1,5 +1,5 @@
 from asyncio import create_task, gather
-from pyrogram import Client, filters
+from pyrogram import Client, filters, enums
 from pyrogram.filters import command, user
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup, InlineQueryResultArticle, InputTextMessageContent
 from pyrogram.enums import MessageEntityType
@@ -44,17 +44,44 @@ async def bypass_check(client, message):
     results = await gather(*tasks, return_exceptions=True)
 
     output = []
+    max_length = 4096  # Telegram message limit
+    current_part = ""
+    parts = []  # To store parts of the output message
+
     for result, link in zip(results, links):
         if isinstance(result, Exception):
-            output.append(f"┖ <b>Error:</b> {result}")
+            entry = f"┖ <b>Error:</b> {result}"
         else:
-            output.append(f"┖ <b>Bypass Link:</b> {result}")
+            entry = f"┖ <b>Bypass Link:</b> {result}"
 
+        # Check if the current part exceeds the max length
+        if len(current_part) + len(entry) > max_length:
+            parts.append(current_part)  # Save the current part
+            current_part = entry  # Start a new part
+        else:
+            current_part += "\n" + entry  # Append to the current part
+
+    # Add the final part
+    if current_part:
+        parts.append(current_part)
+
+    # Add footer details to the last part
     elapsed = time() - start
-    reply_text = "\n".join(output)
-    reply_text += f"\n\n<b>Total Links :- {len(links)}</b>\n<b>Time :- {convert_time(elapsed)}</b>\n\nBypassed By :- <a href=https://t.me/TamilMV_Scrapper_Bot><b>1TamilMV Scrapper Bot</b></a>"
-    await wait_msg.edit(reply_text)
+    footer = (
+        f"\n\n<b>Total Links: {len(links)}</b>\n"
+        f"<b>Time: {convert_time(elapsed)}</b>\n"
+        f"Bypassed By: <a href=https://t.me/TamilMV_Scrapper_Bot><b>1TamilMV Scrapper Bot</b></a>"
+    )
+    if len(parts[-1]) + len(footer) <= max_length:
+        parts[-1] += footer
+    else:
+        parts.append(footer)
 
+    # Edit the wait message with the parts
+    await wait_msg.delete()  # Delete the "Bypassing..." message
+    for part in parts:
+        await message.reply(part, parse_mode=enums.ParseMode.HTML)
+        
 @Client.on_message(BypassFilter1 & filters.user(ADMINS))
 async def bypass_check_for_torrent(client, message):
     try:
