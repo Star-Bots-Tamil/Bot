@@ -19,7 +19,12 @@ async def tamilmv(url):
         
 <b>{no}.</b><code>{filename}</code>
 ┖ <b>Links :</b> <a href="{m['href']}"><b>Magnet </b>🧲</a>  <b>|</b> <a href="{t['href']}"><b>Torrent 🌐</b></a>"""
-    return parse_data
+    max_length = 4096  # Telegram message limit
+    if len(parse_data) > max_length:
+        parts = [parse_data[i:i + max_length] for i in range(0, len(parse_data), max_length)]
+        return parts
+    else:
+        return [parse_data]
     
 async def tamilmv1(url):
     cget = create_scraper().request
