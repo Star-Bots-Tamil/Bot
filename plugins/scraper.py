@@ -6,7 +6,7 @@ async def tamilmv(url):
     cget = create_scraper().request
     resp = cget("GET", url)
     soup = BeautifulSoup(resp.text, "html.parser")
-    mag = soup.select('a[href^="magnet:?xt=urn:btih:"]')
+    mag = [m['href'] for m in soup.select('a[href^="magnet:?xt=urn:btih:"]')]
     tor = soup.select('a[data-fileext="torrent"]')
     parse_data = f"<b><u>{soup.title.string}</u></b>"
     for no, (t, m) in enumerate(zip(tor, mag), start=1):
