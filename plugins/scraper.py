@@ -23,11 +23,13 @@ async def tamilmv1(url):
     soup = BeautifulSoup(resp.text, "html.parser")
     tor = soup.select('a[data-fileext="torrent"]')
 
-    torrent_links = []  # List to store torrent links only
-    
+    torrent_links = []  # List to store filenames and torrent links
+
     for t in tor:
+        filename = re.sub(r"www\S+|\- |\.torrent", "", t.string)  # Clean the filename
         torrent_link = t['href']
-        torrent_links.append(torrent_link)
+        torrent_links.append({"filename": filename, "link": torrent_link})  # Append as a dictionary
+    
     return torrent_links
 
 async def tamilmv2(url):
