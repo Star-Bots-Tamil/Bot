@@ -18,7 +18,7 @@ CHAT_ID = int(os.environ.get("CHAT_ID", -1001542301808))
 # Main bypass handler function
 @Client.on_message(filters.user(ADMINS) & BypassFilter)
 async def bypass_check(client, message):
-    uid = (link unavailable)
+    uid = message.from_user.id
     if (reply_to := message.reply_to_message) and (reply_to.text or reply_to.caption):
         txt = reply_to.text or reply_to.caption
         entities = reply_to.entities or reply_to.caption_entities
@@ -61,15 +61,16 @@ async def bypass_check(client, message):
 
     elapsed = time() - start
     footer = (
-        f"\n\n<b>Total Links: {len(links)}</b>\n"
+        f"<b>Total Links: {len(links)}</b>\n"
         f"<b>Time: {convert_time(elapsed)}</b>\n"
         f"<b>Bypassed By: <a href=https://t.me/TamilMV_Scrapper_Bot>1TamilMV Scrapper Bot</b></a>"
     )
 
+    # Decide footer placement
     if parts and len(parts[-1]) + len(footer) <= max_length:
-        parts[-1] += footer
+        parts[-1] += "\n\n" + footer
     else:
-        parts.append(footer)
+        parts.insert(0, footer)
 
     await wait_msg.delete()
     for part in parts:
