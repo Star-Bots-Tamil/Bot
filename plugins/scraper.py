@@ -18,7 +18,7 @@ async def tamilmv(url):
         parse_data += f"""
         
 <b>{no}.</b> <code>{filename}</code>
-┖ <b>Links :</b> <a href="{m}"><b>Magnet </b>🧲</a>  | <a href="{t['href']}"><b>Torrent 🌐</b></a>"""
+┖ <b>Links :</b> <a href="{m['href']}"><b>Magnet </b>🧲</a>  | <a href="{t['href']}"><b>Torrent 🌐</b></a>"""
     return parse_data
     
 async def tamilmv1(url):
