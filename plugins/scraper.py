@@ -14,7 +14,7 @@ async def tamilmv(url):
     for no, (t, m) in enumerate(zip(tor, mag), start=1):
         filename = re.sub(r"www\S+|\- |\.torrent", "", t.string)
         parse_data += f"""
-<b>{no}.</b><code>{filename}</code>
+<b>{no}.</b> <code>{filename}</code>
 <b>┖ Links: <a href="https://t.me/share/url?url={m['href']}">Magnet 🧲</a> | <a href="{t['href']}">Torrent 🌐</a></b>"""
 
     max_length = 4096  # Telegram message limit
@@ -22,7 +22,7 @@ async def tamilmv(url):
         parts = [parse_data[i:i + max_length] for i in range(0, len(parse_data), max_length)]
         return parts
     else:
-        return [parse_data]
+        return parse_data
     
 async def tamilmv1(url):
     cget = create_scraper().request
