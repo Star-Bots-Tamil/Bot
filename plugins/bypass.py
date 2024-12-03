@@ -52,7 +52,7 @@ async def bypass_check(client, message):
 
     elapsed = time() - start
     reply_text = "\n".join(output)
-    reply_text += f"\n\n<b>Total Links: {len(links)}</b>\n<b>Time: {convert_time(elapsed)}</b>"
+    reply_text += f"\n\n<b>Total Links :- {len(links)}</b>\n<b>Time :- {convert_time(elapsed)}</b>\n\nBypassed By :- <a href=https://t.me/TamilMV_Scrapper_Bot><b>1TamilMV Scrapper Bot</b></a>"
     await wait_msg.edit(reply_text)
 
 @Client.on_message(BypassFilter1 & filters.user(ADMINS))
