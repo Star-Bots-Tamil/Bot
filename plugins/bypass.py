@@ -74,7 +74,7 @@ async def bypass_check_for_torrent(client, message):
 
         # Extract URLs from the message
         for entity in entities:
-            if entity.type in (types.MessageEntityType.URL, types.MessageEntityType.TEXT_LINK):
+            if entity.type in (MessageEntityType.URL, MessageEntityType.TEXT_LINK):
                 link = txt[entity.offset: entity.offset + entity.length]
                 links.append(link)
                 tasks.append(create_task(process_link_and_send(client, link)))
@@ -108,7 +108,7 @@ async def bypass_check_for_magnets(client, message):
 
         # Extract URLs from the message
         for entity in entities:
-            if entity.type in (types.MessageEntityType.URL, types.MessageEntityType.TEXT_LINK):
+            if entity.type in (MessageEntityType.URL, MessageEntityType.TEXT_LINK):
                 link = txt[entity.offset: entity.offset + entity.length]
                 links.append(link)
                 tasks.append(create_task(process_link_and_send1(client, link)))
